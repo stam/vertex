@@ -1,10 +1,10 @@
 import React from "react";
-import Renderer from "./components/Renderer";
+import Canvas from "./components/Canvas";
 import Controls from "./components/Controls";
 
 const App: React.FC = () => {
   return <main className="App">
-    <Renderer />
+    <Canvas />
     <Controls />
   </main>;
 };
