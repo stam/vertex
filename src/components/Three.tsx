@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import OrbitControls from "three-orbitcontrols";
+import { OrbitControls } from "three-orbitcontrols-ts";
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera(
@@ -16,7 +16,7 @@ var controls = new OrbitControls(camera, renderer.domElement);
 var geometry = new THREE.BoxGeometry(1, 1, 1);
 document.body.appendChild(renderer.domElement);
 
-var boxes = [];
+const boxes : THREE.Mesh[] = [];
 var numBoxes = 9;
 for (let x = -numBoxes; x <= numBoxes; x++) {
   for (let y = -numBoxes; y <= numBoxes; y++) {
