@@ -19,12 +19,7 @@ export default class Renderer {
     const { width, height } = canvas.getBoundingClientRect();
     this.scene = new Three.Scene();
 
-    const camera = new Three.PerspectiveCamera(
-      75,
-      width / height,
-      0.1,
-      1000
-    );
+    const camera = new Three.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 5;
     this.camera = camera;
 
@@ -38,31 +33,22 @@ export default class Renderer {
 
   createMeshes() {
     var geometry = new Three.BoxGeometry(1, 1, 1);
-    var numBoxes = 2;
-
-    for (let x = -numBoxes; x <= numBoxes; x++) {
-      for (let y = -numBoxes; y <= numBoxes; y++) {
-        var material = new Three.MeshNormalMaterial();
-        var cube = new Three.Mesh(geometry, material);
-        cube.position.x = x * 1.1;
-        cube.position.y = y * 1.1;
-        this.meshes.push(cube);
-        this.scene.add(cube);
-      }
-    }
+    var material = new Three.MeshNormalMaterial();
+    var cube = new Three.Mesh(geometry, material);
+    this.meshes.push(cube);
+    this.scene.add(cube);
   }
 
   animate() {
     requestAnimationFrame(this.animate.bind(this));
-      for (var mesh of this.meshes) {
-        this.step += 0.0014;
+    this.step += 0.01;
+    for (var mesh of this.meshes) {
+      var x = mesh.position.x;
+      var y = mesh.position.y;
 
-        var x = mesh.position.x;
-        var y = mesh.position.y;
+      mesh.position.z = Math.sin(this.step + Math.sqrt(x * x + y * y));
+    }
 
-        mesh.position.z = 1.4 * Math.sin(this.step + Math.sqrt(x * x + y * y));
-      }
-
-      this.renderer.render(this.scene, this.camera);
+    this.renderer.render(this.scene, this.camera);
   }
 }
