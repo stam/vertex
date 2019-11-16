@@ -2,9 +2,23 @@ import * as Three from "three";
 import { OrbitControls } from "three-orbitcontrols-ts";
 
 export default class Renderer {
+  renderer!: Three.WebGLRenderer;
+  scene!: Three.Scene;
+  camera!: Three.Camera;
+  meshes: Three.Mesh[] = [];
+
+  step = 0;
+
   constructor(canvas: HTMLCanvasElement) {
+    this.setupScene(canvas);
+    this.createMeshes();
+    this.animate();
+  }
+
+  setupScene(canvas: HTMLCanvasElement) {
     const { width, height } = canvas.getBoundingClientRect();
-    const scene = new Three.Scene();
+    this.scene = new Three.Scene();
+
     const camera = new Three.PerspectiveCamera(
       75,
       width / height,
@@ -12,42 +26,43 @@ export default class Renderer {
       1000
     );
     camera.position.z = 5;
+    this.camera = camera;
+
     const renderer = new Three.WebGLRenderer({ canvas });
-    console.log(width, height)
     renderer.setSize(width, height);
-    var geometry = new Three.BoxGeometry(1, 1, 1);
+
+    this.renderer = renderer;
+
     new OrbitControls(camera, renderer.domElement);
-    const boxes: Three.Mesh[] = [];
-    var numBoxes = 9;
+  }
+
+  createMeshes() {
+    var geometry = new Three.BoxGeometry(1, 1, 1);
+    var numBoxes = 2;
+
     for (let x = -numBoxes; x <= numBoxes; x++) {
       for (let y = -numBoxes; y <= numBoxes; y++) {
         var material = new Three.MeshNormalMaterial();
         var cube = new Three.Mesh(geometry, material);
         cube.position.x = x * 1.1;
         cube.position.y = y * 1.1;
-        boxes.push(cube);
-        scene.add(cube);
+        this.meshes.push(cube);
+        this.scene.add(cube);
       }
     }
+  }
 
-    var step = 0;
+  animate() {
+    requestAnimationFrame(this.animate.bind(this));
+      for (var mesh of this.meshes) {
+        this.step += 0.0014;
 
-    var animate = function() {
-      requestAnimationFrame(animate);
+        var x = mesh.position.x;
+        var y = mesh.position.y;
 
-      // work through each box
-      for (var box of boxes) {
-        step += 0.0001;
-
-        var x = box.position.x;
-        var y = box.position.y;
-
-        box.position.z = Math.sin(step + Math.sqrt(x * x + y * y));
+        mesh.position.z = 1.4 * Math.sin(this.step + Math.sqrt(x * x + y * y));
       }
 
-      renderer.render(scene, camera);
-    };
-
-    animate();
+      this.renderer.render(this.scene, this.camera);
   }
 }
