@@ -10,7 +10,7 @@ const Canvas: React.FC = () => {
     }
     renderer.initialize(canvasRef.current);
   }, [canvasRef]);
-  return <canvas ref={canvasRef} className="main" />
+  return <canvas ref={canvasRef} className="main" />;
 };
 
 export default Canvas;

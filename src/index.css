@@ -12,7 +12,7 @@ body {
 main {
   display: grid;
   height: 100vh;
-  grid-template-columns: 1fr 200px;
+  grid-template-columns: 1fr 300px;
 }
 
 canvas.main {
@@ -23,6 +23,14 @@ canvas.main {
 aside {
   color: white;
   padding: 2rem;
+}
+
+aside > * {
+  padding-left: 2rem;
+}
+
+aside > .mesh {
+  padding-left: 0;
 }
 
 .bpm {
@@ -39,4 +47,34 @@ aside {
 
 .bpm span.active {
   opacity: 1;
+}
+
+.mesh {
+  margin: 0.5rem 0;
+  display: flex;
+  align-items: center;
+  height: 4rem;
+}
+
+.slider {
+  height: 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  width: 1rem;
+  margin: 0 0.25rem;
+}
+
+.slider .range {
+  position: relative;
+  flex: 1;
+}
+
+.slider .handle {
+  width: 100%;
+  cursor: pointer;
+  height: 0.25rem;
+  background: white;
+  position: absolute;
 }

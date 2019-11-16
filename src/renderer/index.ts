@@ -1,6 +1,6 @@
 import * as Three from "three";
+import meshStore from "../store/Mesh";
 import { OrbitControls } from "three-orbitcontrols-ts";
-
 
 // const calculateBeatsAway = (start: number, bpm: number) => {
 //   const current = new Date().getTime();
@@ -15,7 +15,7 @@ export class Renderer {
   renderer!: Three.WebGLRenderer;
   scene!: Three.Scene;
   camera!: Three.Camera;
-  meshes: Three.Mesh[] = [];
+  // meshes: Three.Mesh[] = [];
 
   frame = 0;
 
@@ -47,11 +47,17 @@ export class Renderer {
   }
 
   createMeshes() {
-    var geometry = new Three.BoxGeometry(1, 1, 1);
-    var material = new Three.MeshNormalMaterial();
-    var cube = new Three.Mesh(geometry, material);
-    this.meshes.push(cube);
-    this.scene.add(cube);
+    for (const mesh of meshStore.meshes) {
+      var geometry = new Three.BoxGeometry(1, 1, 1);
+      var material = new Three.MeshNormalMaterial();
+      var cube = new Three.Mesh(geometry, material);
+
+      mesh.create(cube, this);
+      // mesh._instance = cube;
+      // mesh._renderer = this;
+      // this.meshes.push(cube);
+      this.scene.add(cube);
+    }
   }
 
   updateSync(timestamp: number, bpm: number) {
@@ -68,9 +74,10 @@ export class Renderer {
 
     this.frame += 0.02;
 
-    for (var mesh of this.meshes) {
-      mesh.position.x = this.beat - 2;
-    }
+    // for (var mesh of meshStore.meshes) {
+    // mesh.render(this);
+    // mesh.position.x = this.beat - 2;
+    // }
 
     this.renderer.render(this.scene, this.camera);
   }

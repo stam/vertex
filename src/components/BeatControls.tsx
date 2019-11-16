@@ -35,7 +35,7 @@ const Controls: React.FC = () => {
 
   const offset = 60000 / bpm;
 
-  let clearActiveTimer: number;
+  let clearActiveTimer: NodeJS.Timeout;
 
   const createTicker = () => {
     clearActiveTimer = setTimeout(() => {
@@ -65,7 +65,7 @@ const Controls: React.FC = () => {
 
   useEffect(() => {
     renderer.updateBeat(beat);
-  }, [beat])
+  }, [beat]);
 
   return (
     <Fragment>
