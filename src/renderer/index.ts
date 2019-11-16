@@ -11,7 +11,7 @@ import { OrbitControls } from "three-orbitcontrols-ts";
 //   return Math.floor(diff / offset);
 // }
 
-export default class Renderer {
+export class Renderer {
   renderer!: Three.WebGLRenderer;
   scene!: Three.Scene;
   camera!: Three.Camera;
@@ -24,7 +24,7 @@ export default class Renderer {
   bpm = 133;
   timestamp = new Date().getTime();
 
-  constructor(canvas: HTMLCanvasElement) {
+  initialize(canvas: HTMLCanvasElement) {
     this.setupScene(canvas);
     this.createMeshes();
     this.animate();
@@ -55,7 +55,6 @@ export default class Renderer {
   }
 
   updateSync(timestamp: number, bpm: number) {
-    console.log('updateSync', timestamp, bpm);
     this.timestamp = timestamp;
     this.bpm = bpm;
   }
@@ -67,16 +66,16 @@ export default class Renderer {
   animate() {
     requestAnimationFrame(this.animate.bind(this));
 
-    // const beat = calculateBeatsAway(this.timestamp, this.bpm) % 4;
     this.frame += 0.02;
 
     for (var mesh of this.meshes) {
-      // var x = mesh.position.x;
-      // var y = mesh.position.y;
-
       mesh.position.x = this.beat - 2;
     }
 
     this.renderer.render(this.scene, this.camera);
   }
 }
+
+const renderer = new Renderer();
+
+export default renderer;
