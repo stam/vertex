@@ -1,13 +1,28 @@
 import * as Three from "three";
 import { OrbitControls } from "three-orbitcontrols-ts";
 
+
+// const calculateBeatsAway = (start: number, bpm: number) => {
+//   const current = new Date().getTime();
+
+//   const diff = current - start;
+//   const offset = 60000 / bpm;
+
+//   return Math.floor(diff / offset);
+// }
+
 export default class Renderer {
   renderer!: Three.WebGLRenderer;
   scene!: Three.Scene;
   camera!: Three.Camera;
   meshes: Three.Mesh[] = [];
 
-  step = 0;
+  frame = 0;
+
+  // music sync
+  beat = 0;
+  bpm = 133;
+  timestamp = new Date().getTime();
 
   constructor(canvas: HTMLCanvasElement) {
     this.setupScene(canvas);
@@ -39,14 +54,27 @@ export default class Renderer {
     this.scene.add(cube);
   }
 
+  updateSync(timestamp: number, bpm: number) {
+    console.log('updateSync', timestamp, bpm);
+    this.timestamp = timestamp;
+    this.bpm = bpm;
+  }
+
+  updateBeat(beat: number) {
+    this.beat = beat;
+  }
+
   animate() {
     requestAnimationFrame(this.animate.bind(this));
-    this.step += 0.01;
-    for (var mesh of this.meshes) {
-      var x = mesh.position.x;
-      var y = mesh.position.y;
 
-      mesh.position.z = Math.sin(this.step + Math.sqrt(x * x + y * y));
+    // const beat = calculateBeatsAway(this.timestamp, this.bpm) % 4;
+    this.frame += 0.02;
+
+    for (var mesh of this.meshes) {
+      // var x = mesh.position.x;
+      // var y = mesh.position.y;
+
+      mesh.position.x = this.beat - 2;
     }
 
     this.renderer.render(this.scene, this.camera);

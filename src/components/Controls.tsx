@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const COUNT = 4;
 
@@ -7,9 +7,11 @@ interface ControlProps {
   bpm: number;
   setTimestamp: (timestamp: number) => void;
   setBpm: (bpm: number) => void;
+  beat: number;
+  setBeat: (beat: number) => void;
 }
 
-let taps : number[] = [];
+let taps: number[] = [];
 // eslint-disable-next-line
 let clearTapTimeout;
 
@@ -23,11 +25,10 @@ const calculateBpm = (beats: number[]) => {
 
   const res = 60000 / ((lastTap - firstTap) / (beats.length - 1));
   return res;
-}
+};
 
-const Controls: React.FC<ControlProps> = (props) => {
-  const { bpm, setTimestamp, setBpm } = props;
-  const [active, setActive] = useState(0);
+const Controls: React.FC<ControlProps> = props => {
+  const { bpm, setTimestamp, setBpm, beat, setBeat } = props;
 
   const offset = 60000 / bpm;
 
@@ -35,16 +36,15 @@ const Controls: React.FC<ControlProps> = (props) => {
 
   const createTicker = () => {
     clearActiveTimer = setTimeout(() => {
-      setActive((active + 1) % COUNT);
+      setBeat((beat + 1) % COUNT);
     }, offset);
-  }
+  };
   createTicker();
 
   const reset = () => {
-    setActive(0);
+    setBeat(0);
     clearTimeout(clearActiveTimer);
-  }
-
+  };
 
   const handleClick = (e: React.MouseEvent) => {
     taps.push(e.timeStamp);
@@ -57,19 +57,21 @@ const Controls: React.FC<ControlProps> = (props) => {
       setBpm(calculatedBpm);
     }
 
+    clearTapTimeout = setTimeout(() => (taps = []), 1000);
+  };
 
-    clearTapTimeout = setTimeout(() => taps = [], 2000);
-  }
-
-  return <aside>
-    <h1>vertex</h1>
-    <div className="bpm" onMouseDown={handleClick}>
-      <span className={active === 0 ? 'active': ''}/>
-      <span className={active === 1 ? 'active': ''}/>
-      <span className={active === 2 ? 'active': ''}/>
-      <span className={active === 3 ? 'active': ''}/>
-    </div>
-  </aside>;
+  return (
+    <aside>
+      <h1>vertex</h1>
+      <p>{Math.round(bpm)} bpm</p>
+      <div className="bpm" onMouseDown={handleClick}>
+        <span className={beat === 0 ? "active" : ""} />
+        <span className={beat === 1 ? "active" : ""} />
+        <span className={beat === 2 ? "active" : ""} />
+        <span className={beat === 3 ? "active" : ""} />
+      </div>
+    </aside>
+  );
 };
 
 export default Controls;

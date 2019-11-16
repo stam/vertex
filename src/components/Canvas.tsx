@@ -1,15 +1,35 @@
 import React, { useEffect, useRef } from "react";
 import Renderer from "../renderer";
 
-const Canvas: React.FC = () => {
+interface CanvasProps {
+  timestamp: number;
+  bpm: number;
+  beat: number;
+}
+
+let renderer: Renderer;
+
+const Canvas: React.FC<CanvasProps> = ({ timestamp, bpm, beat }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    if (renderer) {
+      renderer.updateSync(timestamp, bpm);
+    }
+  }, [timestamp, bpm])
+
+  useEffect(() => {
+    if (renderer) {
+      renderer.updateBeat(beat);
+    }
+  }, [beat])
 
 
   useEffect(() => {
     if (!canvasRef.current) {
       return;
     }
-    new Renderer(canvasRef.current);
+    renderer = new Renderer(canvasRef.current);
   }, [canvasRef]);
   return <canvas ref={canvasRef} className="main" />
 };
