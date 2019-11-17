@@ -2,6 +2,7 @@ import * as Three from "three";
 import meshStore from "../store/Mesh";
 import { OrbitControls } from "three-orbitcontrols-ts";
 import waveStore from "../store/Wave";
+import { observable } from "mobx";
 
 // const calculateBeatsAway = (start: number, bpm: number) => {
 //   const current = new Date().getTime();
@@ -18,7 +19,7 @@ export class Renderer {
   camera!: Three.Camera;
   // meshes: Three.Mesh[] = [];
 
-  frame = 0;
+  @observable frame = 0;
 
   // music sync
   beat = 0;
@@ -29,6 +30,7 @@ export class Renderer {
     this.setupScene(canvas);
     this.createMeshes();
     this.loadOutputs();
+    this.applyConfig();
     this.animate();
   }
 
@@ -55,9 +57,6 @@ export class Renderer {
       var cube = new Three.Mesh(geometry, material);
 
       mesh.create(cube, this);
-      // mesh._instance = cube;
-      // mesh._renderer = this;
-      // this.meshes.push(cube);
       this.scene.add(cube);
     }
   }
@@ -66,6 +65,11 @@ export class Renderer {
     for (const wave of waveStore.waves) {
       wave._renderer = this;
     }
+  }
+
+  applyConfig() {
+    const input = waveStore.waves[0];
+    meshStore.meshes[0].setInput(input, "x");
   }
 
   updateSync(timestamp: number, bpm: number) {
@@ -81,25 +85,6 @@ export class Renderer {
     requestAnimationFrame(this.animate.bind(this));
 
     this.frame += 0.02;
-
-    // if (!waveStore.waves.length) {
-    //   return;
-    // }
-
-    const wave = waveStore.waves[0];
-
-    for (var mesh of meshStore.meshes) {
-      if (!mesh._instance) {
-        return;
-      }
-
-      // console.log("wave", wave.value);
-      mesh.x = wave.value;
-      // mesh.x += 0.02;
-      // mesh.render(this);
-      // mesh.position.x = this.beat - 2;
-    }
-
     this.renderer.render(this.scene, this.camera);
   }
 }

@@ -1,6 +1,9 @@
 import * as Three from "three";
-import { observable, autorun } from "mobx";
+import { observable, autorun, IReactionDisposer } from "mobx";
 import { Renderer } from "../renderer";
+import { ValueInput } from "./Wave";
+
+type AdjustableProp = "x" | "y" | "z" | "hue" | "saturation" | "lightness";
 
 export class Mesh {
   @observable hue = 0;
@@ -11,6 +14,7 @@ export class Mesh {
   @observable y = 0;
   @observable z = 0;
 
+  _inputDisposers: { [key: string]: IReactionDisposer } = {};
   _instance?: Three.Mesh;
   _renderer?: Renderer;
 
@@ -28,13 +32,18 @@ export class Mesh {
     });
   }
 
-  // render(renderer: Renderer) {
-  //   if (!this._instance) {
-  //     return;
-  //   }
-  //   this._instance.position.x = this.x;
-  //   this._instance.position.y = this.y;
-  // }
+  setInput(input: ValueInput, prop: AdjustableProp) {
+    if (this._inputDisposers[prop]) {
+      this._inputDisposers[prop]();
+    }
+
+    // this._input = input;
+    // this._inputProp = prop;
+
+    this._inputDisposers[prop] = autorun(() => {
+      this[prop] = input.value;
+    });
+  }
 }
 
 export class MeshStore {

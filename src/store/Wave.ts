@@ -1,7 +1,11 @@
 import { observable } from "mobx";
 import { Renderer } from "../renderer";
 
-export class Wave {
+export interface ValueInput {
+  value: number;
+}
+
+export class Wave implements ValueInput {
   @observable frequency = 10;
   @observable amplitude = 5;
 
