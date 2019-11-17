@@ -6,6 +6,7 @@ interface SliderProps {
   prop: string;
   from: number;
   to: number;
+  label?: string;
 }
 
 const SCREEN_RANGE = 25;
@@ -22,7 +23,7 @@ const screenToValue = (
 // 0 to 25px
 
 const Slider: React.FC<SliderProps> = observer(props => {
-  const { model, prop, from, to } = props;
+  const { model, prop, from, to, label } = props;
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -65,7 +66,7 @@ const Slider: React.FC<SliderProps> = observer(props => {
       >
         <div className="handle" style={{ top }} />
       </div>
-      <span className="prop">{prop}</span>
+      <span className="prop">{label || prop}</span>
     </div>
   );
 });

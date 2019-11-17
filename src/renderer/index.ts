@@ -1,6 +1,7 @@
 import * as Three from "three";
 import meshStore from "../store/Mesh";
 import { OrbitControls } from "three-orbitcontrols-ts";
+import waveStore from "../store/Wave";
 
 // const calculateBeatsAway = (start: number, bpm: number) => {
 //   const current = new Date().getTime();
@@ -27,6 +28,7 @@ export class Renderer {
   initialize(canvas: HTMLCanvasElement) {
     this.setupScene(canvas);
     this.createMeshes();
+    this.loadOutputs();
     this.animate();
   }
 
@@ -60,6 +62,12 @@ export class Renderer {
     }
   }
 
+  loadOutputs() {
+    for (const wave of waveStore.waves) {
+      wave._renderer = this;
+    }
+  }
+
   updateSync(timestamp: number, bpm: number) {
     this.timestamp = timestamp;
     this.bpm = bpm;
@@ -74,10 +82,23 @@ export class Renderer {
 
     this.frame += 0.02;
 
-    // for (var mesh of meshStore.meshes) {
-    // mesh.render(this);
-    // mesh.position.x = this.beat - 2;
+    // if (!waveStore.waves.length) {
+    //   return;
     // }
+
+    const wave = waveStore.waves[0];
+
+    for (var mesh of meshStore.meshes) {
+      if (!mesh._instance) {
+        return;
+      }
+
+      // console.log("wave", wave.value);
+      mesh.x = wave.value;
+      // mesh.x += 0.02;
+      // mesh.render(this);
+      // mesh.position.x = this.beat - 2;
+    }
 
     this.renderer.render(this.scene, this.camera);
   }
