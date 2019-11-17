@@ -1,13 +1,13 @@
 import * as Three from "three";
 import { observable, autorun, IReactionDisposer } from "mobx";
 import { Renderer } from "../renderer";
-import { ValueInput } from "./Wave";
+import { ValueOutput } from "./Output";
 
 type AdjustableProp = "x" | "y" | "z" | "hue" | "saturation" | "lightness";
 
 export interface LinkedInput {
   dispose: IReactionDisposer;
-  value: ValueInput;
+  value: ValueOutput;
 }
 
 export class Mesh {
@@ -38,7 +38,7 @@ export class Mesh {
     });
   }
 
-  setInput(input: ValueInput, prop: AdjustableProp) {
+  setInput(input: ValueOutput, prop: AdjustableProp) {
     if (this._inputDisposers[prop]) {
       this._inputDisposers[prop].dispose();
     }
@@ -63,6 +63,17 @@ export class Mesh {
 
 export class MeshStore {
   @observable meshes = [new Mesh()];
+
+  _renderer?: Renderer;
+
+  addMesh() {
+    if (!this._renderer) {
+      return;
+    }
+    const mesh = new Mesh();
+    this._renderer.initMesh(mesh);
+    this.meshes.push(mesh);
+  }
 }
 
 const meshStore = new MeshStore();

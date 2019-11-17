@@ -1,9 +1,9 @@
-import { ValueInput } from "../store/Wave";
+import { ValueOutput } from "../store/Output";
 import { Mesh } from "../store/Mesh";
 
-let _input: ValueInput;
+let _input: ValueOutput;
 
-export const registerDrag = (model: ValueInput) => {
+export const registerDrag = (model: ValueOutput) => {
   _input = model;
 };
 

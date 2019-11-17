@@ -28,6 +28,8 @@ const screenToValue = (
 const Slider: React.FC<SliderProps> = observer(props => {
   const { model, prop, from, to, label, droppable = false } = props;
 
+  console.log("slider mode", model);
+
   const sliderRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
   const value = model[prop];

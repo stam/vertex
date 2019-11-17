@@ -1,7 +1,7 @@
 import * as Three from "three";
-import meshStore from "../store/Mesh";
+import meshStore, { Mesh } from "../store/Mesh";
 import { OrbitControls } from "three-orbitcontrols-ts";
-import waveStore from "../store/Wave";
+import inputStore from "../store/Output";
 import { observable } from "mobx";
 
 // const calculateBeatsAway = (start: number, bpm: number) => {
@@ -28,8 +28,7 @@ export class Renderer {
 
   initialize(canvas: HTMLCanvasElement) {
     this.setupScene(canvas);
-    this.createMeshes();
-    this.loadOutputs();
+    this.initStores();
     this.applyConfig();
     this.animate();
   }
@@ -50,27 +49,35 @@ export class Renderer {
     new OrbitControls(camera, renderer.domElement);
   }
 
-  createMeshes() {
+  initStores() {
+    meshStore._renderer = this;
+    inputStore._renderer = this;
+
     for (const mesh of meshStore.meshes) {
-      var geometry = new Three.BoxGeometry(1, 1, 1);
-      var material = new Three.MeshNormalMaterial();
-      var cube = new Three.Mesh(geometry, material);
-
-      mesh.create(cube, this);
-      this.scene.add(cube);
+      this.initMesh(mesh);
     }
-  }
 
-  loadOutputs() {
-    for (const wave of waveStore.waves) {
+    for (const wave of inputStore.waves) {
       wave._renderer = this;
     }
   }
 
+  initMesh(mesh: Mesh) {
+    const geometry = new Three.BoxGeometry(1, 1, 1);
+    const material = new Three.MeshNormalMaterial();
+    const cube = new Three.Mesh(geometry, material);
+
+    mesh.create(cube, this);
+    this.scene.add(cube);
+  }
+
   applyConfig() {
-    const input = waveStore.waves[0];
+    const input = inputStore.waves[0];
+
+    if (!input) {
+      return;
+    }
     meshStore.meshes[0].setInput(input, "x");
-    // meshStore.meshes[0].setInput(input, "y");
   }
 
   updateSync(timestamp: number, bpm: number) {

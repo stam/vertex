@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect } from "react";
 import renderer from "../renderer";
 
 const COUNT = 4;
@@ -19,14 +19,14 @@ const calculateBpm = (beats: number[]) => {
   return res;
 };
 
+let clearActiveTimer: NodeJS.Timeout;
+
 const Controls: React.FC = () => {
   // const [timestamp, setTimestamp] = useState(new Date().getTime());
   const [bpm, setBpm] = useState(60);
   const [beat, setBeat] = useState(0);
 
   const offset = 60000 / bpm;
-
-  let clearActiveTimer: NodeJS.Timeout;
 
   const createTicker = () => {
     clearActiveTimer = setTimeout(() => {
@@ -51,7 +51,7 @@ const Controls: React.FC = () => {
       setBpm(calculatedBpm);
     }
 
-    clearTapTimeout = setTimeout(() => (taps = []), 1000);
+    clearTapTimeout = setTimeout(() => (taps = []), 900);
   };
 
   useEffect(() => {
@@ -59,15 +59,15 @@ const Controls: React.FC = () => {
   }, [beat]);
 
   return (
-    <Fragment>
+    <div className="bpm">
       <p>{Math.round(bpm)} bpm</p>
-      <div className="bpm" onMouseDown={handleClick}>
+      <div className="beat" onMouseDown={handleClick}>
         <span className={beat === 0 ? "active" : ""} />
         <span className={beat === 1 ? "active" : ""} />
-        <span className={beat === 2 ? "active" : ""} />
         <span className={beat === 3 ? "active" : ""} />
+        <span className={beat === 2 ? "active" : ""} />
       </div>
-    </Fragment>
+    </div>
   );
 };
 

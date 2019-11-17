@@ -1,5 +1,5 @@
 import React from "react";
-import { Wave } from "../store/Wave";
+import { Wave } from "../store/Output";
 import Slider from "./Slider";
 import { registerDrag } from "../behavior/dragHandler";
 
