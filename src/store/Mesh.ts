@@ -31,8 +31,9 @@ export class Mesh {
       if (!this._instance) {
         return;
       }
+
       this._instance.position.x = this.x;
-      this._instance.position.y = -this.y;
+      this._instance.position.y = this.y;
       this._instance.position.z = this.z;
     });
   }

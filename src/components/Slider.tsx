@@ -20,7 +20,7 @@ const screenToValue = (
   to: number,
   from: number
 ) => {
-  const relativeValue = screen * (range / SCREEN_RANGE);
+  const relativeValue = (SCREEN_RANGE - screen) * (range / SCREEN_RANGE);
   return Math.max(Math.min(relativeValue + from, to), from);
 };
 // 0 to 25px
@@ -33,7 +33,7 @@ const Slider: React.FC<SliderProps> = observer(props => {
   const value = model[prop];
 
   const range = to - from;
-  const top = (value - from) * (SCREEN_RANGE / range);
+  const top = (to - value) * (SCREEN_RANGE / range);
 
   const handleMouseDown = () => {
     setDragging(true);
