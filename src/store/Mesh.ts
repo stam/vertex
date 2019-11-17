@@ -11,9 +11,9 @@ export interface LinkedInput {
 }
 
 export class Mesh {
-  @observable hue = 0;
-  @observable saturation = 0;
-  @observable lightness = 0;
+  @observable hue = 1;
+  @observable saturation = 0.9;
+  @observable lightness = 0.5;
 
   @observable x = 0;
   @observable y = 0;
@@ -35,6 +35,21 @@ export class Mesh {
       this._instance.position.x = this.x;
       this._instance.position.y = this.y;
       this._instance.position.z = this.z;
+    });
+
+    autorun(() => {
+      if (!this._instance) {
+        return;
+      }
+
+      if (this._instance.material instanceof Array) {
+        return;
+      }
+
+      const color = new Three.Color();
+      color.setHSL(this.hue, this.saturation, this.lightness);
+      const m = new Three.MeshBasicMaterial({ color });
+      this._instance.material = m;
     });
   }
 

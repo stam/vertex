@@ -12,7 +12,7 @@ body {
 main {
   display: grid;
   height: 100vh;
-  grid-template-columns: 1fr 320px;
+  grid-template-columns: 1fr auto;
 }
 
 canvas.main {
@@ -23,7 +23,7 @@ canvas.main {
 aside {
   color: white;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 130px 200px;
   grid-template-rows: auto 1fr;
   grid-gap: 1rem;
 }

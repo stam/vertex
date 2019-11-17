@@ -64,7 +64,7 @@ export class Renderer {
 
   initMesh(mesh: Mesh) {
     const geometry = new Three.BoxGeometry(1, 1, 1);
-    const material = new Three.MeshNormalMaterial();
+    const material = new Three.MeshBasicMaterial({ color: 0xffffff });
     const cube = new Three.Mesh(geometry, material);
 
     mesh.create(cube, this);
