@@ -3,15 +3,6 @@ import renderer from "../renderer";
 
 const COUNT = 4;
 
-// interface ControlProps {
-//   timestamp: number;
-//   bpm: number;
-//   setTimestamp: (timestamp: number) => void;
-//   setBpm: (bpm: number) => void;
-//   beat: number;
-//   setBeat: (beat: number) => void;
-// }
-
 let taps: number[] = [];
 // eslint-disable-next-line
 let clearTapTimeout;

@@ -3,11 +3,14 @@ import { Renderer } from "../renderer";
 
 export interface ValueInput {
   value: number;
+  color: string;
 }
 
 export class Wave implements ValueInput {
   @observable frequency = 10;
   @observable amplitude = 5;
+
+  color = "red";
 
   _renderer?: Renderer;
 

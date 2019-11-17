@@ -49,6 +49,15 @@ aside > .controls {
   opacity: 1;
 }
 
+.prop.droppable {
+  background: #333;
+  border-radius: 2rem;
+}
+
+.prop.linked {
+  cursor: crosshair;
+}
+
 .controls {
   margin: 0.5rem 0;
   display: flex;
@@ -77,4 +86,16 @@ aside > .controls {
   height: 0.25rem;
   background: white;
   position: absolute;
+}
+
+.controls .dot {
+  margin-left: auto;
+}
+
+.dot {
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  cursor: grab;
+  border-radius: 2rem;
 }

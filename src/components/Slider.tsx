@@ -1,11 +1,14 @@
 import React, { useRef, useState } from "react";
 import { observer } from "mobx-react";
+import { registerDrop } from "../behavior/dragHandler";
+import { LinkedInput } from "../store/Mesh";
 
 interface SliderProps {
   model: any;
   prop: string;
   from: number;
   to: number;
+  droppable?: boolean;
   label?: string;
 }
 
@@ -23,7 +26,7 @@ const screenToValue = (
 // 0 to 25px
 
 const Slider: React.FC<SliderProps> = observer(props => {
-  const { model, prop, from, to, label } = props;
+  const { model, prop, from, to, label, droppable = false } = props;
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
@@ -55,6 +58,22 @@ const Slider: React.FC<SliderProps> = observer(props => {
     model[prop] = screenToValue(top, range, to, from);
   };
 
+  const handleDrop = (e: React.DragEvent) => {
+    registerDrop(model, prop);
+  };
+
+  const link: LinkedInput =
+    model._inputDisposers && model._inputDisposers[prop];
+
+  const linkStyle = link ? { background: link.value.color } : undefined;
+
+  const handleUnlink = () => {
+    if (!link) {
+      return;
+    }
+    model.removeInput(prop);
+  };
+
   return (
     <div className="slider">
       <div
@@ -66,7 +85,15 @@ const Slider: React.FC<SliderProps> = observer(props => {
       >
         <div className="handle" style={{ top }} />
       </div>
-      <span className="prop">{label || prop}</span>
+      <span
+        className={`${droppable && "droppable"} ${link && "linked"} prop`}
+        style={linkStyle}
+        onClick={handleUnlink}
+        onDragOver={e => e.preventDefault()}
+        onDrop={handleDrop}
+      >
+        {label || prop}
+      </span>
     </div>
   );
 });

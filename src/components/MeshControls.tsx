@@ -11,9 +11,9 @@ const MeshControls: React.FC<MeshProps> = props => {
   return (
     <div className="mesh controls">
       Mesh
-      <Slider model={model} prop="x" from={-5} to={5} />
-      <Slider model={model} prop="y" from={-5} to={5} />
-      <Slider model={model} prop="z" from={-5} to={5} />
+      <Slider model={model} prop="x" from={-5} to={5} droppable />
+      <Slider model={model} prop="y" from={-5} to={5} droppable />
+      <Slider model={model} prop="z" from={-5} to={5} droppable />
     </div>
   );
 };

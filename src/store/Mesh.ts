@@ -5,6 +5,11 @@ import { ValueInput } from "./Wave";
 
 type AdjustableProp = "x" | "y" | "z" | "hue" | "saturation" | "lightness";
 
+export interface LinkedInput {
+  dispose: IReactionDisposer;
+  value: ValueInput;
+}
+
 export class Mesh {
   @observable hue = 0;
   @observable saturation = 0;
@@ -14,7 +19,7 @@ export class Mesh {
   @observable y = 0;
   @observable z = 0;
 
-  _inputDisposers: { [key: string]: IReactionDisposer } = {};
+  @observable _inputDisposers: { [key: string]: LinkedInput } = {};
   _instance?: Three.Mesh;
   _renderer?: Renderer;
 
@@ -34,15 +39,24 @@ export class Mesh {
 
   setInput(input: ValueInput, prop: AdjustableProp) {
     if (this._inputDisposers[prop]) {
-      this._inputDisposers[prop]();
+      this._inputDisposers[prop].dispose();
     }
 
-    // this._input = input;
-    // this._inputProp = prop;
+    this._inputDisposers[prop] = {
+      dispose: autorun(() => {
+        this[prop] = input.value;
+      }),
+      value: input
+    };
+  }
 
-    this._inputDisposers[prop] = autorun(() => {
-      this[prop] = input.value;
-    });
+  removeInput(prop: AdjustableProp) {
+    if (!this._inputDisposers[prop]) {
+      return;
+    }
+
+    this._inputDisposers[prop].dispose();
+    delete this._inputDisposers[prop];
   }
 }
 

@@ -70,6 +70,7 @@ export class Renderer {
   applyConfig() {
     const input = waveStore.waves[0];
     meshStore.meshes[0].setInput(input, "x");
+    // meshStore.meshes[0].setInput(input, "y");
   }
 
   updateSync(timestamp: number, bpm: number) {
